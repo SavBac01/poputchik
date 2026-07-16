@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Попутчик — прототип</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabler-icons/2.47.0/iconfont/tabler-icons.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Caveat:wght@600&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --kraft:#E9DFC8;
+  --kraft-dark:#DCCFAE;
+  --ink:#241E12;
+  --navy:#1B2B4B;
+  --navy-2:#233A63;
+  --rust:#C1502E;
+  --rust-dark:#9A3B20;
+  --gold:#D9A441;
+  --sage:#5F7A6B;
+  --paper:#F6F1E4;
+  --card:#FFFDF6;
+  --line:#CDBF9C;
+}
+*{box-sizing:border-box;}
+body{
+  margin:0;
+  background:
+    radial-gradient(circle at 15% 8%, #ffffff22, transparent 40%),
+    var(--kraft);
+  background-image:
+    radial-gradient(circle at 15% 8%, #ffffff30, transparent 40%),
+    repeating-linear-gradient(0deg, transparent, transparent 39px, #00000006 40px),
+    repeating-linear-gradient(90deg, transparent, transparent 39px, #00000005 40px),
+    var(--kraft);
+  font-family:'Inter',sans-serif;
+  color:var(--ink);
+  min-height:100vh;
+  padding:0 0 60px;
+}
+
+/* ============ HERO / LANDING ============ */
+.hero{
+  position:relative;
+  max-width:1100px;
+  margin:0 auto;
+  padding:56px 24px 40px;
+  overflow:hidden;
+}
+.hero-top{
+  display:flex; align-items:center; justify-content:space-between; margin-bottom:34px;
+}
+.hero-brand{
+  display:flex; align-items:center; gap:10px;
+  font-family:'Fraunces',serif; font-weight:700; font-size:20px; color:var(--navy);
+}
+.hero-brand .stamp-mini{
+  width:32px;height:32px;border-radius:50%;border:2px dashed var(--rust);
+  display:flex;align-items:center;justify-content:center;color:var(--rust);font-size:14px;
+}
+.hero-eyebrow{
+  font-family:'IBM Plex Mono',monospace; font-size:11.5px; letter-spacing:.12em; text-transform:uppercase;
+  color:var(--rust-dark); border:1px solid var(--rust-dark); border-radius:999px; padding:5px 12px;
+}
+.hero-main{
+  display:grid; grid-template-columns:1.1fr 0.9fr; gap:40px; align-items:center;
+}
+.hero-main h1{
+  font-family:'Fraunces',serif; font-weight:700; font-size:clamp(34px,5vw,54px); line-height:1.04;
+  margin:0 0 18px; color:var(--navy);
+}
+.hero-main h1 em{ font-style:italic; color:var(--rust); }
+.hero-main p.lead{
+  font-size:16px; line-height:1.65; color:#3d3626; max-width:440px; margin:0 0 26px;
+}
+.hero-tags{ display:flex; gap:10px; flex-wrap:wrap; margin-bottom:8px;}
+.hero-tags span{
+  font-family:'IBM Plex Mono',monospace; font-size:11.5px; color:var(--sage);
+  border:1px solid var(--line); border-radius:999px; padding:6px 12px; background:#ffffffaa;
+}
+
+/* dotted flight-path map */
+.map-wrap{ position:relative; height:340px; }
+.map-svg{ width:100%; height:100%; }
+.map-city{ fill:var(--navy); }
+.map-city-label{
+  font-family:'IBM Plex Mono',monospace; font-size:9px; fill:var(--navy); letter-spacing:.03em;
+}
+.map-route{
+  fill:none; stroke:var(--rust); stroke-width:1.6; stroke-dasharray:4 5; opacity:.75;
+}
+.map-plane{ transform-origin:center; }
+.polaroid-float{
+  position:absolute; background:#fff; padding:8px 8px 22px; box-shadow:0 14px 30px -12px rgba(27,43,75,.35);
+  width:104px;
+}
+.polaroid-float img,.polaroid-float .ph{ width:100%; height:78px; display:block; border-radius:2px; }
+.polaroid-float .cap{
+  font-family:'Caveat',cursive; font-size:17px; color:var(--ink); position:absolute; bottom:2px; left:10px;
+}
+.tape{
+  position:absolute; width:46px; height:18px; background:#E3D9BE; opacity:.85;
+  box-shadow:0 1px 3px rgba(0,0,0,.15);
+}
+
+/* ============ APP FRAME SECTION ============ */
+.app-section{
+  max-width:1100px; margin:10px auto 0; padding:0 24px;
+  display:flex; gap:56px; justify-content:center; flex-wrap:wrap; align-items:flex-start;
+}
+.app-note{ max-width:280px; padding-top:50px; }
+.app-note .num{
+  font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--rust-dark); margin:0 0 8px;
+}
+.app-note h3{ font-family:'Fraunces',serif; font-size:20px; color:var(--navy); margin:0 0 10px; }
+.app-note p{ font-size:13.5px; line-height:1.6; color:#4a4433; }
+
+.phone{
+  width:380px;
+  background:var(--navy);
+  border-radius:38px;
+  padding:14px;
+  box-shadow:0 40px 70px -25px rgba(27,43,75,.5);
+  position:relative;
+}
+.phone::before{
+  content:'ПОПУТЧИК · ПОСАДОЧНЫЙ ТАЛОН №0042';
+  position:absolute; top:-26px; left:14px; font-family:'IBM Plex Mono',monospace; font-size:9.5px;
+  letter-spacing:.1em; color:#8a7b57;
+}
+.screen{
+  background:var(--paper);
+  border-radius:26px;
+  overflow:hidden;
+  height:760px;
+  display:flex;
+  flex-direction:column;
+  position:relative;
+}
+.notch{ height:28px; display:flex; align-items:center; justify-content:center; background:var(--navy); }
+.notch::after{ content:''; width:90px; height:6px; border-radius:4px; background:#0006; }
+.view{ flex:1; display:none; flex-direction:column; overflow-y:auto; }
+.view.active{ display:flex; }
+.view::-webkit-scrollbar{display:none;}
+
+/* shared */
+.topbar{ display:flex; align-items:center; justify-content:space-between; padding:18px 18px 10px; }
+.brand{ display:flex; align-items:center; gap:8px; font-family:'Fraunces',serif; font-weight:700; font-size:18px; color:var(--navy); }
+.brand i{ font-size:20px; color:var(--rust); }
+.avatar-btn{
+  width:34px;height:34px;border-radius:50%;background:var(--navy);
+  display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;cursor:pointer;border:none;font-family:'Inter',sans-serif;font-weight:600;
+}
+h2.section-title{
+  font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.08em; text-transform:uppercase;
+  color:var(--sage); margin:18px 18px 8px; display:flex; align-items:center; gap:6px;
+}
+h2.section-title::before{ content:''; width:14px; height:1px; background:var(--line); }
+
+/* onboarding */
+#view-onboard{ justify-content:flex-end; }
+.onboard-hero{
+  flex:1; background:
+    radial-gradient(circle at 30% 20%, #ffffff18, transparent 45%),
+    linear-gradient(165deg, var(--navy) 0%, var(--navy-2) 55%, #2E4E7E 100%);
+  display:flex; align-items:center; justify-content:center; position:relative;
+  border-radius:0 0 46% 46% / 0 0 64px 64px; overflow:hidden;
+}
+.onboard-hero svg{ width:70%; opacity:.9; }
+.onboard-stamp{
+  position:absolute; width:98px; height:98px; border-radius:50%;
+  border:2px dashed var(--gold); display:flex; align-items:center; justify-content:center;
+  color:var(--gold); font-family:'IBM Plex Mono',monospace; font-size:9.5px; text-align:center; line-height:1.3;
+  transform:rotate(-12deg); top:22px; left:18px;
+}
+.onboard-panel{ padding:24px 22px 28px; background:var(--paper); }
+.onboard-panel .eyebrow{
+  font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--rust-dark);
+  text-transform:uppercase; letter-spacing:.08em; margin:0 0 8px;
+}
+.onboard-panel h1{ font-family:'Fraunces',serif; font-size:25px; font-weight:700; color:var(--navy); margin:0 0 10px; line-height:1.2; }
+.onboard-panel p{ font-size:13.5px; color:#5c5642; margin:0 0 18px; line-height:1.55; }
+.btn{ width:100%; padding:13px; border-radius:11px; border:none; font-family:'Inter',sans-serif; font-weight:600; font-size:14.5px; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; }
+.btn-primary{ background:var(--rust); color:#fff; }
+.btn-primary:hover{ background:var(--rust-dark); }
+.btn-ghost{ background:transparent; color:var(--navy); border:1.5px solid var(--line); margin-top:9px; }
+.btn-ghost:hover{ border-color:var(--navy); }
+
+/* register */
+.form-wrap{ padding:8px 22px 24px; }
+.field{ margin-bottom:14px; }
+.field label{ display:block; font-size:12px; color:var(--sage); margin-bottom:6px; font-weight:500; }
+.field input{ width:100%; padding:11px 12px; border-radius:9px; border:1.5px solid var(--line); background:var(--card); font-size:14px; font-family:'Inter',sans-serif; color:var(--ink); }
+.field input:focus{ outline:none; border-color:var(--rust); }
+.chip-row{ display:flex; gap:8px; flex-wrap:wrap; }
+.chip{ padding:8px 14px; border-radius:999px; border:1.5px solid var(--line); font-size:13px; color:var(--sage); cursor:pointer; background:var(--card); }
+.chip.on{ background:var(--navy); border-color:var(--navy); color:#fff; }
+
+/* home */
+.cat-row{ display:grid; grid-template-columns:repeat(3,1fr); gap:8px; padding:0 18px 6px; }
+.cat-btn{ display:flex; flex-direction:column; align-items:center; gap:5px; padding:12px 4px; border-radius:12px; border:1.5px solid var(--line); background:var(--card); cursor:pointer; }
+.cat-btn i{ font-size:20px; color:var(--sage); }
+.cat-btn span{ font-size:11.5px; color:var(--sage); font-weight:500; }
+.cat-btn.on{ background:var(--navy); border-color:var(--navy); }
+.cat-btn.on i, .cat-btn.on span{ color:#fff; }
+
+.region-scroll{ display:flex; gap:8px; overflow-x:auto; padding:0 18px 10px; }
+.region-scroll::-webkit-scrollbar{display:none;}
+.region-pill{ flex-shrink:0; font-size:12.5px; padding:7px 14px; border-radius:999px; border:1.5px solid var(--line); background:var(--card); color:var(--sage); cursor:pointer; white-space:nowrap; }
+.region-pill.on{ background:var(--gold); border-color:var(--gold); color:#4A340A; font-weight:600; }
+
+.country-row{ display:flex; gap:6px; padding:0 18px 16px; flex-wrap:wrap; }
+.country-tag{ font-size:11.5px; color:var(--sage); padding:5px 11px; border-radius:999px; border:1px solid var(--line); cursor:pointer; background:var(--card); }
+.country-tag.on{ border-color:var(--rust); color:var(--rust-dark); background:#F7E4DC; }
+
+/* postcard-style buddy cards */
+.card-list{ padding:2px 18px 4px; display:flex; flex-direction:column; gap:16px; }
+.buddy-card{
+  background:var(--card); border-radius:4px; padding:10px 10px 12px; display:flex; gap:12px; align-items:center;
+  border:1px solid var(--line); cursor:pointer; position:relative;
+  box-shadow:2px 3px 0 #00000008;
+  transform:rotate(var(--rot,0deg));
+}
+.buddy-card:nth-child(odd){ --rot:-0.6deg; }
+.buddy-card:nth-child(even){ --rot:0.5deg; }
+.buddy-card:hover{ border-color:var(--rust); }
+.buddy-card .tape-corner{
+  position:absolute; top:-7px; left:16px; width:34px; height:14px; background:#E3D9BE; opacity:.9; transform:rotate(-3deg);
+}
+.buddy-photo{
+  width:52px;height:52px;border-radius:3px; flex-shrink:0; border:3px solid #fff; box-shadow:0 2px 6px rgba(0,0,0,.15);
+  display:flex;align-items:center;justify-content:center; font-family:'Fraunces',serif; font-weight:700; font-size:16px; color:#fff;
+}
+.buddy-info{ flex:1; min-width:0; }
+.buddy-info .name{ font-size:14.5px; font-weight:600; margin:0 0 2px; color:var(--ink); }
+.buddy-info .meta{ font-size:12px; color:var(--sage); margin:0; }
+.buddy-info .trip{ font-size:11.5px; color:var(--rust-dark); margin:4px 0 0; font-family:'IBM Plex Mono',monospace; }
+.verified{
+  width:20px;height:20px;border-radius:50%; border:1.4px dashed var(--rust); flex-shrink:0;
+  display:flex; align-items:center; justify-content:center; color:var(--rust); font-size:10px;
+}
+
+.tabbar{ display:flex; justify-content:space-around; align-items:center; padding:10px 0 12px; background:var(--card); border-top:1px solid var(--line); }
+.tab-item{ display:flex; flex-direction:column; align-items:center; gap:3px; cursor:pointer; background:none; border:none; }
+.tab-item i{ font-size:20px; color:var(--sage); }
+.tab-item span{ font-size:10.5px; color:var(--sage); }
+.tab-item.on i, .tab-item.on span{ color:var(--rust-dark); }
+
+/* modal */
+.modal-back{ position:absolute; inset:0; background:rgba(27,43,75,.6); display:none; align-items:flex-end; z-index:5; }
+.modal-back.active{ display:flex; }
+.modal-sheet{ background:var(--paper); width:100%; border-radius:22px 22px 0 0; max-height:88%; overflow-y:auto; padding-bottom:20px; }
+.modal-hero{ height:150px; display:flex; align-items:flex-end; padding:16px; position:relative; }
+.modal-hero .close{ position:absolute; top:12px; right:12px; width:30px;height:30px;border-radius:50%; background:#ffffffcc; display:flex;align-items:center;justify-content:center; cursor:pointer; border:none; }
+.modal-hero .who p.name{ font-family:'Fraunces',serif; font-size:22px; font-weight:700; margin:0; color:#fff; }
+.modal-hero .who p.loc{ font-size:12.5px; margin:2px 0 0; opacity:.9; color:#fff; }
+.modal-body{ padding:16px 18px 4px; }
+.tag-list{ display:flex; gap:6px; flex-wrap:wrap; margin:0 0 14px; }
+.tag-list span{ font-size:11.5px; padding:5px 10px; border-radius:999px; background:var(--card); border:1px solid var(--line); color:var(--sage); }
+.modal-body p.bio{ font-size:13.5px; line-height:1.6; color:var(--ink); margin:0 0 16px; }
+.stat-row{ display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:18px; }
+.stat-box{ background:var(--card); border-radius:10px; padding:10px 12px; border:1px solid var(--line); }
+.stat-box .lbl{ font-size:10.5px; color:var(--sage); text-transform:uppercase; letter-spacing:.05em; margin:0 0 3px; font-family:'IBM Plex Mono',monospace;}
+.stat-box .val{ font-size:14px; font-weight:600; margin:0; }
+.modal-actions{ display:flex; gap:10px; padding:0 18px; }
+.modal-actions .btn{ flex:1; }
+
+.toast{ position:absolute; bottom:76px; left:18px; right:18px; background:var(--navy); color:#fff; padding:12px 16px; border-radius:11px; font-size:13px; display:flex; align-items:center; gap:8px; opacity:0; transform:translateY(10px); transition:.25s; pointer-events:none; z-index:9; }
+.toast.show{ opacity:1; transform:translateY(0); }
+.toast i{ color:var(--gold); font-size:16px; }
+
+@media (max-width:880px){
+  .hero-main{ grid-template-columns:1fr; }
+  .map-wrap{ height:240px; }
+  .app-section{ flex-direction:column; align-items:center; }
+  .app-note{ order:2; text-align:center; max-width:380px; padding-top:20px; }
+}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-top">
+    <div class="hero-brand"><span class="stamp-mini">✈</span>Попутчик</div>
+    <span class="hero-eyebrow">Кликабельный прототип</span>
+  </div>
+
+  <div class="hero-main">
+    <div>
+      <h1>Лечу в Бали.<br><em>Не с кем.</em></h1>
+      <p class="lead">Сайт для тех, кто хочет путешествовать вдвоём или компанией — без романтики и без «плюс один» из BlaBlaCar. Регион, даты, кто ищет кого — и находишь того, кто летит туда же.</p>
+      <div class="hero-tags">
+        <span>не сайт знакомств</span>
+        <span>регион → страна</span>
+        <span>девушка / парень / компания</span>
+      </div>
+    </div>
+
+    <div class="map-wrap">
+      <svg class="map-svg" viewBox="0 0 400 340" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="70" cy="90" r="4" class="map-city"/>
+        <text x="80" y="86" class="map-city-label">МОСКВА</text>
+        <circle cx="300" cy="200" r="4" class="map-city"/>
+        <text x="310" y="196" class="map-city-label">БАЛИ</text>
+        <circle cx="230" cy="70" r="3.2" class="map-city"/>
+        <text x="240" y="66" class="map-city-label">ТБИЛИСИ</text>
+        <circle cx="150" cy="250" r="3.2" class="map-city"/>
+        <text x="160" y="270" class="map-city-label">ДУБАЙ</text>
+        <path class="map-route" d="M70,90 Q180,40 300,200"/>
+        <path class="map-route" d="M70,90 Q140,60 230,70"/>
+        <path class="map-route" d="M70,90 Q100,180 150,250"/>
+        <g class="map-plane" transform="translate(190,120) rotate(35)">
+          <path d="M0,-6 L2,0 L10,2 L10,4 L2,3 L0,9 L-2,3 L-7,5 L-7,3 L-2,0 Z" fill="var(--rust)"/>
+        </g>
+      </svg>
+
+      <div class="polaroid-float" style="top:8px; left:6px; transform:rotate(-7deg);">
+        <div class="ph" style="background:#5B8C7B;"></div>
+        <span class="cap">Бали, авг</span>
+      </div>
+      <div class="tape" style="top:-4px; left:24px; transform:rotate(-8deg);"></div>
+
+      <div class="polaroid-float" style="bottom:14px; right:0; transform:rotate(6deg);">
+        <div class="ph" style="background:#C1502E;"></div>
+        <span class="cap">Тбилиси</span>
+      </div>
+      <div class="tape" style="bottom:78px; right:20px; transform:rotate(9deg);"></div>
+    </div>
+  </div>
+</div>
+
+<div class="app-section">
+  <div class="app-note">
+    <p class="num">01 / прототип</p>
+    <h3>Потыкай сам</h3>
+    <p>Это рабочий макет: своя анкета, фильтры по региону и стране, карточки-«открытки» попутчиков, профиль с описанием поездки. Всё на месте, кроме бэкенда — данные живут в памяти вкладки.</p>
+  </div>
+
+  <div class="phone">
+    <div class="screen">
+      <div class="notch"></div>
+
+      <div class="view active" id="view-onboard">
+        <div class="onboard-hero">
+          <div class="onboard-stamp">ПОПУТЧИК<br>EST. 2026</div>
+          <svg viewBox="0 0 200 140" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="40" cy="100" r="3" fill="#fff" opacity=".8"/>
+            <circle cx="160" cy="40" r="3" fill="#fff" opacity=".8"/>
+            <path d="M40,100 Q100,20 160,40" fill="none" stroke="#D9A441" stroke-width="1.4" stroke-dasharray="3 5" opacity=".8"/>
+            <g transform="translate(95,55) rotate(30)">
+              <path d="M0,-9 L3,0 L15,3 L15,6 L3,4.5 L0,13 L-3,4.5 L-11,7 L-11,4 L-3,0 Z" fill="#fff" opacity=".9"/>
+            </g>
+          </svg>
+        </div>
+        <div class="onboard-panel">
+          <p class="eyebrow">Добро пожаловать</p>
+          <h1>Найди того, кто тоже летит</h1>
+          <p>Регион, даты, компания — и никакого «а ты точно не хочешь замуж».</p>
+          <button class="btn btn-primary" onclick="goTo('register')"><i class="ti ti-user-plus"></i>Создать анкету</button>
+          <button class="btn btn-ghost" onclick="goTo('home')"><i class="ti ti-login"></i>У меня уже есть анкета</button>
+        </div>
+      </div>
+
+      <div class="view" id="view-register">
+        <div class="topbar">
+          <button class="avatar-btn" onclick="goTo('onboard')" aria-label="Назад"><i class="ti ti-arrow-left"></i></button>
+          <div class="brand"><i class="ti ti-plane-departure"></i>Анкета</div>
+          <div style="width:34px;"></div>
+        </div>
+        <div class="form-wrap">
+          <div class="field"><label>Имя</label><input type="text" id="reg-name" placeholder="Как к тебе обращаться"></div>
+          <div class="field"><label>Возраст</label><input type="number" id="reg-age" placeholder="27"></div>
+          <div class="field">
+            <label>Кого ищешь в поездку</label>
+            <div class="chip-row" id="reg-looking">
+              <span class="chip" data-v="Девушку">Девушку</span>
+              <span class="chip" data-v="Парня">Парня</span>
+              <span class="chip" data-v="Компанию">Компанию</span>
+            </div>
+          </div>
+          <div class="field"><label>О себе</label><input type="text" id="reg-bio" placeholder="Пара слов о стиле путешествий"></div>
+          <button class="btn btn-primary" onclick="submitRegister()"><i class="ti ti-check"></i>Готово</button>
+        </div>
+      </div>
+
+      <div class="view" id="view-home">
+        <div class="topbar">
+          <div class="brand"><i class="ti ti-plane-departure"></i>Попутчик</div>
+          <button class="avatar-btn" onclick="openProfile('me')" aria-label="Мой профиль" id="my-avatar">Я</button>
+        </div>
+
+        <h2 class="section-title">Кого ищешь</h2>
+        <div class="cat-row" id="cat-row">
+          <button class="cat-btn on" data-v="Девушку" onclick="pickCat(this)"><i class="ti ti-gender-female"></i><span>Девушку</span></button>
+          <button class="cat-btn" data-v="Парня" onclick="pickCat(this)"><i class="ti ti-gender-male"></i><span>Парня</span></button>
+          <button class="cat-btn" data-v="Компанию" onclick="pickCat(this)"><i class="ti ti-users-group"></i><span>Компанию</span></button>
+        </div>
+
+        <h2 class="section-title">Регион</h2>
+        <div class="region-scroll" id="region-scroll"></div>
+        <div class="country-row" id="country-row"></div>
+
+        <h2 class="section-title" id="list-title">Анкеты</h2>
+        <div class="card-list" id="card-list"></div>
+        <div style="height:14px;"></div>
+
+        <div class="tabbar">
+          <button class="tab-item on"><i class="ti ti-home"></i><span>Главная</span></button>
+          <button class="tab-item" onclick="showToast('Поиск по датам и цене — в разработке')"><i class="ti ti-search"></i><span>Поиск</span></button>
+          <button class="tab-item" onclick="showToast('Чаты откроются после первого мэтча')"><i class="ti ti-message-circle"></i><span>Чаты</span></button>
+          <button class="tab-item" onclick="openProfile('me')"><i class="ti ti-user"></i><span>Профиль</span></button>
+        </div>
+      </div>
+
+      <div class="modal-back" id="modal-back" onclick="closeProfileOnBg(event)">
+        <div class="modal-sheet" onclick="event.stopPropagation()">
+          <div class="modal-hero" id="modal-hero">
+            <button class="close" onclick="closeProfile()" aria-label="Закрыть"><i class="ti ti-x"></i></button>
+            <div class="who">
+              <p class="name" id="modal-name">Имя</p>
+              <p class="loc" id="modal-loc">Направление</p>
+            </div>
+          </div>
+          <div class="modal-body">
+            <div class="tag-list" id="modal-tags"></div>
+            <p class="bio" id="modal-bio"></p>
+            <div class="stat-row">
+              <div class="stat-box"><p class="lbl">Ищет</p><p class="val" id="modal-looking">—</p></div>
+              <div class="stat-box"><p class="lbl">Даты</p><p class="val" id="modal-dates">—</p></div>
+            </div>
+          </div>
+          <div class="modal-actions">
+            <button class="btn btn-ghost" style="margin-top:0;" onclick="closeProfile()">Позже</button>
+            <button class="btn btn-primary" onclick="sendMatch()"><i class="ti ti-send"></i>Написать</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="toast" id="toast"><i class="ti ti-info-circle"></i><span id="toast-text"></span></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const state = { cat:'Девушку', region:'Азия', country:null, me:{name:'',age:'',looking:'Девушку',bio:''} };
+
+const regions = {
+  'Азия': ['Таиланд','Вьетнам','Индонезия','Малайзия','Шри-Ланка'],
+  'Европа': ['Испания','Италия','Грузия','Сербия','Португалия'],
+  'Ближний Восток': ['ОАЭ','Турция','Оман','Иордания'],
+  'Сев. Америка': ['США','Мексика','Канада'],
+  'Юж. Америка': ['Бразилия','Перу','Аргентина'],
+  'Центральная Азия': ['Казахстан','Узбекистан','Киргизия']
+};
+
+const people = [
+  {id:1,name:'Марина',age:27,cat:'Девушку',region:'Азия',country:'Таиланд',trip:'12–24 авг',photo:'МК',color:'#5DCAA5',bio:'Люблю бюджетные маршруты и рассветы на скутере. Ищу компанию без нытья про вайфай.',tags:['бэкпэкинг','фото','дайвинг'],verified:true},
+  {id:2,name:'Даша + Оля',age:25,cat:'Компанию',region:'Азия',country:'Таиланд',trip:'сентябрь',photo:'ДО',color:'#EF9F27',bio:'Летим вдвоём, ищем ещё пару человек в группу — веселее и дешевле жильё.',tags:['пляж','группа','йога'],verified:false},
+  {id:3,name:'Алина',age:24,cat:'Девушку',region:'Азия',country:'Малайзия',trip:'гибкие даты',photo:'АТ',color:'#378ADD',bio:'Работаю удалённо, могу подвинуть даты. Ищу человека с похожим темпом.',tags:['удалёнка','кофе','города'],verified:true},
+  {id:4,name:'Игорь',age:31,cat:'Парня',region:'Европа',country:'Грузия',trip:'1–10 окт',photo:'ИР',color:'#7F77DD',bio:'Автостоп и горы. Ищу попутчика, который не боится ночевать в палатке.',tags:['горы','автостоп','вино'],verified:true},
+  {id:5,name:'Настя',age:29,cat:'Девушку',region:'Европа',country:'Сербия',trip:'ноябрь',photo:'НС',color:'#D4537E',bio:'Первый раз одна за границей, ищу компанию для уверенности и разговоров.',tags:['новичок','архитектура'],verified:false},
+  {id:6,name:'Тимур',age:26,cat:'Парня',region:'Ближний Восток',country:'ОАЭ',trip:'дек, 5 дней',photo:'ТМ',color:'#D85A30',bio:'Хочу нормальную движуху без пафоса, бюджет средний.',tags:['движуха','пляж'],verified:false},
+  {id:7,name:'Ксюша',age:23,cat:'Девушку',region:'Сев. Америка',country:'Мексика',trip:'янв 2027',photo:'КС',color:'#639922',bio:'Планирую заранее, ищу человека тоже с загранпаспортом и терпением к бюрократии виз.',tags:['планирование','сёрфинг'],verified:true},
+  {id:8,name:'группа «Атлас»',age:null,cat:'Компанию',region:'Юж. Америка',country:'Перу',trip:'февраль',photo:'АТ',color:'#3C3489',bio:'Уже трое, набираем ещё двоих на Мачу-Пикчу и джунгли.',tags:['треккинг','история'],verified:true},
+];
+
+function pickCat(btn){
+  document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  state.cat = btn.dataset.v;
+  renderList();
+}
+
+function renderRegions(){
+  const wrap = document.getElementById('region-scroll');
+  wrap.innerHTML = '';
+  Object.keys(regions).forEach(r=>{
+    const el = document.createElement('span');
+    el.className = 'region-pill' + (r===state.region ? ' on':'');
+    el.textContent = r;
+    el.onclick = ()=>{ state.region=r; state.country=null; renderRegions(); renderCountries(); renderList(); };
+    wrap.appendChild(el);
+  });
+}
+
+function renderCountries(){
+  const wrap = document.getElementById('country-row');
+  wrap.innerHTML = '';
+  (regions[state.region]||[]).forEach(c=>{
+    const el = document.createElement('span');
+    el.className = 'country-tag' + (c===state.country ? ' on':'');
+    el.textContent = c;
+    el.onclick = ()=>{ state.country = (state.country===c ? null : c); renderCountries(); renderList(); };
+    wrap.appendChild(el);
+  });
+}
+
+function renderList(){
+  const wrap = document.getElementById('card-list');
+  const title = document.getElementById('list-title');
+  let list = people.filter(p => p.cat===state.cat && p.region===state.region && (!state.country || p.country===state.country));
+  title.textContent = list.length ? 'Анкеты · ' + list.length : 'Анкеты';
+  wrap.innerHTML = '';
+  if(!list.length){
+    wrap.innerHTML = '<p style="font-size:13px;color:var(--sage);padding:10px 2px;">Пока никого нет с таким фильтром. Попробуй другую страну или регион.</p>';
+    return;
+  }
+  list.forEach(p=>{
+    const card = document.createElement('div');
+    card.className = 'buddy-card';
+    card.onclick = ()=>openProfile(p.id);
+    card.innerHTML = `
+      <div class="tape-corner"></div>
+      <div class="buddy-photo" style="background:${p.color}">${p.photo}</div>
+      <div class="buddy-info">
+        <p class="name">${p.name}${p.age?', '+p.age:''}</p>
+        <p class="meta">${p.country}</p>
+        <p class="trip">${p.trip}</p>
+      </div>
+      ${p.verified ? '<div class="verified" title="Подтверждённый профиль"><i class="ti ti-check"></i></div>' : '<i class="ti ti-chevron-right" style="color:var(--sage);font-size:16px;"></i>'}
+      `;
+    wrap.appendChild(card);
+  });
+}
+
+let currentProfile = null;
+function openProfile(id){
+  const back = document.getElementById('modal-back');
+  if(id==='me'){
+    currentProfile = {name: state.me.name || 'Твоя анкета', country:'—', color:'#1B2B4B', photo: (state.me.name||'Я').slice(0,2).toUpperCase(),
+      bio: state.me.bio || 'Заполни анкету, чтобы её увидели другие путешественники.', tags:['черновик'],
+      looking: state.me.looking || '—', trip:'не указаны'};
+  } else {
+    currentProfile = people.find(p=>p.id===id);
+  }
+  document.getElementById('modal-hero').style.background = `linear-gradient(180deg, ${currentProfile.color}00, ${currentProfile.color})`;
+  document.getElementById('modal-name').textContent = currentProfile.name;
+  document.getElementById('modal-loc').textContent = currentProfile.country + (currentProfile.trip ? ' · ' + currentProfile.trip : '');
+  document.getElementById('modal-bio').textContent = currentProfile.bio;
+  document.getElementById('modal-looking').textContent = currentProfile.cat || currentProfile.looking || '—';
+  document.getElementById('modal-dates').textContent = currentProfile.trip || '—';
+  const tagsWrap = document.getElementById('modal-tags');
+  tagsWrap.innerHTML = '';
+  (currentProfile.tags||[]).forEach(t=>{
+    const s = document.createElement('span'); s.textContent = t; tagsWrap.appendChild(s);
+  });
+  back.classList.add('active');
+}
+function closeProfile(){ document.getElementById('modal-back').classList.remove('active'); }
+function closeProfileOnBg(e){ if(e.target.id==='modal-back') closeProfile(); }
+function sendMatch(){
+  closeProfile();
+  showToast('Заявка отправлена: ' + (currentProfile ? currentProfile.name : ''));
+}
+
+function showToast(text){
+  const t = document.getElementById('toast');
+  document.getElementById('toast-text').textContent = text;
+  t.classList.add('show');
+  clearTimeout(window._toastTimer);
+  window._toastTimer = setTimeout(()=>t.classList.remove('show'), 2400);
+}
+
+function goTo(view){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.getElementById('view-'+view).classList.add('active');
+}
+
+document.querySelectorAll('#reg-looking .chip').forEach(chip=>{
+  chip.onclick = ()=>{
+    document.querySelectorAll('#reg-looking .chip').forEach(c=>c.classList.remove('on'));
+    chip.classList.add('on');
+    state.me.looking = chip.dataset.v;
+  };
+});
+document.querySelector('#reg-looking .chip').classList.add('on');
+
+function submitRegister(){
+  state.me.name = document.getElementById('reg-name').value.trim();
+  state.me.age = document.getElementById('reg-age').value.trim();
+  state.me.bio = document.getElementById('reg-bio').value.trim();
+  document.getElementById('my-avatar').textContent = (state.me.name||'Я').slice(0,2).toUpperCase();
+  goTo('home');
+  showToast('Анкета создана. Можно смотреть попутчиков.');
+}
+
+renderRegions();
+renderCountries();
+renderList();
+</script>
+</body>
+</html>
